@@ -8,15 +8,15 @@
 ```
 git clone https://github.com/andr3ixx/factify
 ```
-2. Navigate to the project directory:
+### 2. Navigate to the project directory:
 ```
 cd your-repository
 ```
-3. Install dependencies (if any):
+### 3. Install dependencies (if any):
 ```
 npm install
 ```
-4. Start the application.
+### 4. Start the application.
 ```
 py manage.py runserver
 ```
