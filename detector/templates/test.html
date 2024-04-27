@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting Started with Chart JS with www.chartjs3.com</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    .chartMenu {
+      width: 100vw;
+      height: 40px;
+      background: #1A1A1A;
+      color: rgba(54, 162, 235, 1);
+    }
+
+    .chartMenu p {
+      padding: 10px;
+      font-size: 20px;
+    }
+
+    .chartCard {
+      width: 100vw;
+      height: calc(100vh - 40px);
+      background: rgba(54, 162, 235, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chartBox {
+      width: 700px;
+      padding: 20px;
+      border-radius: 20px;
+      border: solid 3px rgba(54, 162, 235, 1);
+      background: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chartMenu">
+    <p>WWW.CHARTJS3.COM (Chart JS <span id="chartVersion"></span>)</p>
+  </div>
+  <div class="chartCard">
+    <div class="chartBox">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+  <script>
+    // setup 
+    const data = {
+      labels: ['Lehitimo', 'Peke'],
+      datasets: [{
+        data: [90, 10],
+        borderRadius: 10,
+        backgroundColor: ['green', 'red'],
+        hoverBackgroundColor: ['green', 'red'],
+        borderWidth: 0
+      }]
+    };
+
+    Chart.register({
+      id: 'doughnutLabel',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+        const { ctx, data } = chart;
+        ctx.save();
+        const xCoor = chart.getDatasetMeta(0).data[0].x;
+        const yCoor = chart.getDatasetMeta(0).data[0].y;
+        ctx.font = 'bold 30px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillStyle = 'rgba(54, 162, 235, 1)'
+        ctx.fillText(`${data.labels[0]}`, xCoor, yCoor)
+      }
+    });
+
+
+    // config 
+    const config = {
+      type: 'doughnut',
+      data,
+      options: {
+        responsive: true,
+        cutout: '85%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              usePointStyle: true,
+              boxWidth: 10,
+              padding: 20
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                return tooltipItem.raw + '%';
+              }
+            }
+          },
+        }
+      },
+
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+    chartVersion.innerText = Chart.version;
+  </script>
+
+</body>
+
+</html>

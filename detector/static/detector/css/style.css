@@ -1,0 +1,62 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900;700&display=swap');
+
+/* Apply Fonts */
+body {
+  font-family: 'Inter', sans-serif; /* Default font for the body */
+  color: #383838;
+  background-attachment: fixed;
+  background-position: center bottom;
+}
+
+.bg-blue{
+  background-image: radial-gradient(circle at center bottom, #6472f37d -5%, #f8f8f8 50%, #f8f8f8 100%);
+}
+
+.bg-green{
+  background-image: radial-gradient(circle at center bottom, #64f38d7d -5%, #f8f8f8 50%, #f8f8f8 100%);
+}
+
+.bg-red{
+  background-image: radial-gradient(circle at center bottom, #f364647d -5%, #f8f8f8 50%, #f8f8f8 100%);
+}
+
+.outfit-font{
+  font-family: 'Outfit', sans-serif;
+}
+
+.custom-max-width {
+  max-width: 65%; /* Set maximum width to 75% */
+}
+
+/* Custom tooltip styles */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+.input_disabled{
+  cursor: not-allowed !important;
+  background-color: #fff;
+}

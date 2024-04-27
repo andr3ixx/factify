@@ -1,0 +1,118 @@
+<!-- detector/templates/home.html -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>factify | Fake News Detector</title>
+  <!-- Add favicon link -->
+  <link rel="icon" href="{% static 'detector/images/favicon-white.ico' %}" type="image/x-icon">
+  <!-- Include Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'detector/css/style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.0/dist/Chart.min.js"></script>
+</head>
+
+<body id="body" class="flex items-center justify-center bg-blue">
+  <div class="lg:max-w-[70vw] md:max-w-[85vw] max-w-[90vw] my-10">
+    <div class="flex items-center justify-center">
+      <img id="logo" src="{% static 'detector/images/factify.png' %}" class="mr-2 h-9" />
+      <h1 class="text-2xl outfit-font font-medium">factify</h1>
+    </div>
+    <div class="mt-5 mb-5 text-center">
+      <h1 class="text-2xl outfit-font font-medium">Detektor ng Pekeng Balita sa Pilipinas</h1>
+      <p class="text-sm mt-5">Baguhin ang iyong karanasan sa online gamit ang Detektor ng Peke na Balita sa
+        Pilipinas, tiyaking ang impormasyon ay gabay ng katotohanan sa mundo. I-paste ang iyong teksto o
+        simulan ang pagsusulat sa ibaba upang matukoy kung ang artikulo ay peke o hindi.</p>
+    </div>
+    <!-- Input -->
+    <form id="analyze-form" class="md:flex border border-1.5 rounded-xl border-gray-300 shadow-xl bg-white">
+      <!-- Left Panel (3/4 width on lg screens, full width on sm screens) -->
+      <div class="w-full md:w-2/3 lg:w-4/5 p-5">
+        <textarea id="text_input" class="min-h-[25vh] md:min-h-[55vh] w-full outline-none text-sm resize-none"
+          placeholder="Ilagay ang teksto (kailangan ng hindi bababa sa 100 na karakter)."></textarea>
+      </div>
+
+      <!-- Right Panel (1/4 width on lg screens, full width on sm screens) -->
+      <div class="w-full md:w-1/3 lg:w-1/5 md:border-l-2 p-3 flex flex-col justify-between rounded-r-xl">
+        <!-- Content inside the right panel -->
+        <div class="flex flex-col w-full h-full justify-between">
+          <!-- Primary Section -->
+          <div id="primary" class="flex-grow w-full">
+            <h2 class="text-xl outfit-font mb-3 font-medium">Simulan na natin.</h2>
+            <p class="text-sm mb-2"><b>Hakbang 1:</b> Magtype o mag-paste ng artikulo ng balita.</p>
+            <p class="text-sm mb-2"><b>Hakbang 2:</b> I-click ang  <i class="text-blue-500 font-medium">'Suriin'</i> na pindutan upang suriin ang
+              artikulo.</p>
+            <p class="text-sm mb-2"><b>Hakbang 3:</b> Maghintay ng mga resulta.</p>
+          </div>
+
+          <!-- Sinusuri ang teksto Section (initially hidden) -->
+          <div id="sinusuri" class="flex-grow flex flex-col items-center justify-center text-center hidden">
+            <img src="{% static 'detector/images/loading.gif' %}" class="max-h-32" />
+            <p class="text-sm mb-2">Sinusuri ang teksto...</p>
+          </div>
+
+          <!-- Results Section (initially hidden) -->
+          <div id="results" class="flex-grow flex md:flex-col items-center justify-center text-center hidden">
+            <div class="w-1/2 md:w-full max-h-[40vh] md:max-h-full items-center justify-center text-center">
+              <canvas id="resultChart"></canvas>
+            </div>
+            <div class="w-0.75/2 md:w-full">
+              <h1 id="resulta" class="text-4xl uppercase font-semibold mb-3"></h1>
+              <table class="table-auto text-xs w-full" id="resultTable">
+                <thead>
+                  <tr>
+                    <th class="text-left">MODELO</th>
+                    <th colspan="2">PREDIKSYON</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Buttons Section -->
+          <div class=" flex justify-between">
+            <button id="clear_btn" type="button"
+              class="group cursor-pointer relative transition ease-in-out delay-50  hover:scale-95 hover:bg-blue-300/50 grow-0 bg-blue-300/20 text-blue rounded p-2 mr-2 text-xs">
+              <img src="{% static 'detector/images/clear.png' %}" class="h-5" />
+              <div
+                class="opacity-0 p-1 bg-black text-white text-center text-xs rounded-lg absolute z-10 group-hover:opacity-100 bottom-full -left-1/4 pointer-events-none">
+                Burahin
+                <svg class="absolute text-black h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255"
+                  xml:space="preserve">
+                  <polygon class="fill-current" points="0,0 127.5,127.5 255,0" />
+                </svg>
+              </div>
+              </b>
+            </button>
+
+            <button id="analyze_btn" type="button"
+              class="grow transition ease-in-out delay-50  hover:scale-95 hover:bg-indigo-500 duration-200 bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded p-2 text-sm hidden">
+              Suriin
+            </button>
+            <button id="cancel_btn" type="button"
+              class="grow bg-blue-100/50 text-blue-600 rounded p-2 text-sm font-medium hidden">Kanselahin</button>
+            <button id="bago_btn" type="button"
+              class="grow transition ease-in-out delay-50  hover:scale-105 border border-gray-300 hover:bg-zinc-100 text-zinc-500 rounded p-2 text-xs uppercase font-medium hidden">Burahin</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+  </div>
+  <script src="{% static 'detector/js/main.js' %}"></script>
+  <script src="{% static 'detector/js/chart.umd.min.js' %}"></script>
+
+  <script>
+
+  </script>
+
+</body>
+
+</html>
