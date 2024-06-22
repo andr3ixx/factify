@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
               console.error('Fetch error:', error);
             }
           });
-      }, 2000);
+      }, 100);
     } else {
       alert('Mangyaring mag-input ng hindi bababa sa 100 na karakter.');
     }
@@ -334,4 +334,96 @@ document.addEventListener('DOMContentLoaded', function () {
   text_input.addEventListener('input', toggleClearButton);
 
   toggleClearButton();
+});
+
+function copyText() {
+  const textToCopy = document.getElementById('text-to-copy').innerText;
+  const checkIcon = document.getElementById('check-icon');
+  const copyIcon = document.getElementById('copy-icon');
+  const kopyahinText = document.getElementById('kopyahin-text');
+  const nakopyaText = document.getElementById('nakopya-text');
+
+  // Initial state: show copy icon and text, hide check icon and nakopya text
+  copyIcon.classList.remove('hidden');
+  kopyahinText.classList.remove('hidden');
+  checkIcon.classList.add('hidden');
+  nakopyaText.classList.add('hidden');
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    // After copying: show check icon and nakopya text, hide copy icon and kopyahin text
+    copyIcon.classList.add('hidden');
+    kopyahinText.classList.add('hidden');
+    checkIcon.classList.remove('hidden');
+    nakopyaText.classList.remove('hidden');
+
+    // After 2 seconds, revert back to the initial state
+    setTimeout(() => {
+      copyIcon.classList.remove('hidden');
+      kopyahinText.classList.remove('hidden');
+      checkIcon.classList.add('hidden');
+      nakopyaText.classList.add('hidden');
+    }, 2000);
+  }).catch(err => {
+    console.error('Error copying text: ', err);
+  });
+}
+
+
+document.getElementById('dataForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  // Gather user selections
+  const select1 = document.getElementById('dataset');
+  const select2 = document.getElementById('inaasahan');
+  const select3 = document.getElementById('prediksyon');
+  const errorGroup = document.getElementById('error-group');
+  const textToCopy = document.getElementById('text-to-copy');
+  const copyContainer = document.getElementById('copyContainer');
+  const copyLoading = document.getElementById('loading-copy');
+
+  copyLoading.classList.remove('hidden');
+  copyContainer.classList.add('hidden');
+  errorGroup.classList.add('hidden');
+  // Clear previous error messages
+  errorGroup.textContent = '';
+  textToCopy.textContent = '';
+
+  // Validate that all select elements have a valid selection
+  if (!select1.value || !select2.value || !select3.value) {
+    errorGroup.classList.remove('hidden');
+    copyLoading.classList.add('hidden');
+    errorGroup.textContent = 'PUMILI NG ISANG PAGPIPILIAN PARA SA LAHAT NG OPSIYON.';
+    return;
+  }
+
+  // Prepare data to send to Django
+  const askData = {
+    select1: select1.value,
+    select2: select2.value,
+    select3: select3.value
+  };
+
+  // Send AJAX request to Django backend
+  fetch('/process_data/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(askData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      setTimeout(() => {
+        textToCopy.textContent = data.result;
+  
+        copyLoading.classList.add('hidden');
+        copyContainer.classList.remove('hidden');
+    }, 1500);
+    })
+    .catch(error => {
+      errorGroup.classList.remove('hidden');
+      copyLoading.classList.add('hidden');
+      errorGroup.textContent = error;
+      console.error('Error:', error);
+    });
 });

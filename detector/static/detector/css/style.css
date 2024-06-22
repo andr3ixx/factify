@@ -60,3 +60,10 @@ body {
   cursor: not-allowed !important;
   background-color: #fff;
 }
+
+.overlay-copy {
+  display: none;
+}
+.group:hover .overlay-copy {
+  display: flex;
+}

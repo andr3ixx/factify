@@ -44,7 +44,8 @@
           <div id="primary" class="flex-grow w-full">
             <h2 class="text-xl outfit-font mb-3 font-medium">Simulan na natin.</h2>
             <p class="text-sm mb-2"><b>Hakbang 1:</b> Magtype o mag-paste ng artikulo ng balita.</p>
-            <p class="text-sm mb-2"><b>Hakbang 2:</b> I-click ang  <i class="text-blue-500 font-medium">'Suriin'</i> na pindutan upang suriin ang
+            <p class="text-sm mb-2"><b>Hakbang 2:</b> I-click ang <i class="text-blue-500 font-medium">'Suriin'</i> na
+              pindutan upang suriin ang
               artikulo.</p>
             <p class="text-sm mb-2"><b>Hakbang 3:</b> Maghintay ng mga resulta.</p>
           </div>
@@ -61,6 +62,7 @@
               <canvas id="resultChart"></canvas>
             </div>
             <div class="w-0.75/2 md:w-full">
+              <h2 class="text-xs uppercase mt-2">Ang teksto ay maaring</h2>
               <h1 id="resulta" class="text-4xl uppercase font-semibold mb-3"></h1>
               <table class="table-auto text-xs w-full" id="resultTable">
                 <thead>
@@ -103,6 +105,85 @@
         </div>
       </div>
     </form>
+    <!-- Input -->
+    <div class="flex-col flex mt-10 mb-5 md:flex border border-1.5 rounded-xl border-gray-300 shadow-xl bg-white  p-5">
+      <h1 class="text-xl outfit-font"><span class="font-medium">Subukan ang Detektor:</span> I-paste mula sa aming
+        Dataset</h1>
+
+      <div id="error-group"
+        class="bg-red-100 mt-3 hidden rounded-md border border-red-300 text-red-700 p-4 text-xs uppercase font-semibold"
+        role="alert"></div>
+
+      <form id="dataForm" class="mt-3 mb-3 flex justify-stretch">
+        <div class="mr-2 flex-1">
+          <label for="dataset" class="mb-2 text-sm font-medium text-gray-900">Pumili ng Dataset</label>
+          <select id="dataset"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected disabled value="">Pumili...</option>
+            <option value="test">Test</option>
+            <option value="train">Train</option>
+          </select>
+        </div>
+
+        <div class="mr-2 flex-1">
+          <label for="inaasahan" class="mb-2 text-sm font-medium text-gray-900">Inaasahang Resulta</label>
+          <select id="inaasahan"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected disabled value="">Pumili...</option>
+            <option value="1">Lehitimo</option>
+            <option value="0">Peke</option>
+          </select>
+        </div>
+
+        <div class="mr-2 flex-1">
+          <label for="prediksyon" class="mb-2 text-sm font-medium text-gray-900">Prediksyon ng Modelo</label>
+          <div class="flex">
+
+            <select id="prediksyon"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mr-2">
+              <option selected disabled value="">Pumili...</option>
+              <option value="1">Lehitimo</option>
+              <option value="0">Peke</option>
+            </select>
+
+            <button id="isumite_btn" type="submit"
+              class="grow transition ease-in-out delay-50 hover:scale-95 hover:bg-indigo-500 duration-200 bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded px-3 py-2 text-xs uppercase ">
+              isumite
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Loading for text to be copied -->
+      <div class="py-16 flex justify-center hidden" id="loading-copy">
+        <img src="{% static 'detector/images/loading-dark.gif' %}" class="max-h-14" />
+      </div>
+
+      <!-- Text to be copied -->
+      <div class="p-3 border border-3 rounded-md border-zinc-300 bg-zinc-100 relative group hidden" id="copyContainer">
+        <span id="text-to-copy"></span>
+        <div
+          class="overlay-copy grow transition ease-in-out delay-50 absolute inset-0 bg-black rounded-md bg-opacity-25 items-center justify-center">
+          <div>
+            <button onclick="copyText()" type="button"
+              class="grow transition ease-in-out delay-50 hover:scale-95 duration-200 bg-white rounded px-4 py-3 uppercase  text-sm flex items-center">
+              <svg id="check-icon" class="h-3 pr-1 mr-1 hidden" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512">
+                <path
+                  d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+              </svg>
+              <svg id="copy-icon" class="h-3 pr-1 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path
+                  d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z" />
+              </svg>
+              <span id="kopyahin-text" class="">Kopyahin</span>
+              <span id="nakopya-text" class="hidden">Nakopya na</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
   </div>

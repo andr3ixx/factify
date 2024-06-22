@@ -34,8 +34,10 @@ def predict(text):
     # Load vectorizer
     vectorizer = joblib.load('detector/static/detector/models/vectorizer_mlp.joblib')
 
+    text = ' '.join(processed)
+
     # Transform the validation data using the same vectorizer
-    tfidf = vectorizer.transform(processed)
+    tfidf = vectorizer.transform([text])
 
     stack_model = joblib.load('detector/static/detector/models/stack_mlp.joblib')  # Update with your model path
 
